@@ -7,6 +7,33 @@ export const YIELD_VAULT_ADDRESS = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 export const TIMELOCK_ADDRESS = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
 export const GOVERNOR_ADDRESS = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
 
+export const VAULT_ABI = parseAbi([
+    "function deposit(uint256 assets, address receiver) returns (uint256)",
+    "function redeem(uint256 shares, address receiver, address owner) returns (uint256)",
+    "function totalAssets() view returns (uint256)",
+    "function balanceOf(address owner) view returns (uint256)",
+    "function previewDeposit(uint256 assets) view returns (uint256)",
+    "function previewRedeem(uint256 shares) view returns (uint256)",
+    "function asset() view returns (address)"
+]);
+
+export const AMM_FACTORY_ABI = parseAbi([
+    "function getPair(address tokenA, address tokenB) view returns (address)",
+    "function createPair(address tokenA, address tokenB) returns (address)",
+    "function allPairsLength() view returns (uint256)"
+]);
+
+export const AMM_PAIR_ABI = parseAbi([
+    "function getReserves() view returns (uint256 reserve0, uint256 reserve1)",
+    "function addLiquidity(uint256 amount0, uint256 amount1, address to) returns (uint256)",
+    "function removeLiquidity(uint256 liquidity, address to) returns (uint256, uint256)",
+    "function swap(uint256 amount0Out, uint256 amount1Out, address to)",
+    "function balanceOf(address owner) view returns (uint256)",
+    "function approve(address spender, uint256 value) returns (bool)",
+    "function token0() view returns (address)",
+    "function token1() view returns (address)"
+]);
+
 export const TOKEN_ABI = parseAbi([
     "function balanceOf(address owner) view returns (uint256)",
     "function delegate(address delegatee)",
