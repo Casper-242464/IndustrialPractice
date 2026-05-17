@@ -5,6 +5,9 @@ import {Script, console} from "forge-std/Script.sol";
 import {GovernanceToken} from "src/governance/GovernanceToken.sol";
 import {DSATimelock} from "src/governance/DSATimelock.sol";
 import {DSAGovernor} from "src/governance/DSAGovernor.sol";
+import {AMMFactory} from "src/AMMFactory.sol";
+import {LendingPool} from "src/LendingPool.sol";
+import {YieldVault} from "src/YieldVault.sol";
 
 contract DeployLocal is Script {
     function run() external {
@@ -16,6 +19,18 @@ contract DeployLocal is Script {
 
         GovernanceToken token = new GovernanceToken("DSA Token", "DSA", deployer, 1000 ether);
         console.log("GovernanceToken deployed to:", address(token));
+
+        // Deploy and Initialize AMM Factory
+        AMMFactory factory = new AMMFactory();
+        factory.initialize(deployer);
+        console.log("AMMFactory deployed and initialized at:", address(factory));
+
+        // Deploy Lending and Yield Infrastructure
+        LendingPool lendingPool = new LendingPool();
+        console.log("LendingPool deployed to:", address(lendingPool));
+
+        YieldVault vault = new YieldVault(token, "Yield DSA", "yDSA");
+        console.log("YieldVault deployed to:", address(vault));
 
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](0);
