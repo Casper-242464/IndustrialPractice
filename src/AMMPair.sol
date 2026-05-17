@@ -220,7 +220,7 @@ contract AMMPair is ReentrancyGuard {
         unchecked {
             uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
             uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
-            require(balance0Adjusted * balance1Adjusted >= _reserve0 * _reserve1 * (1000**2), "AMMPair: K");
+            require(balance0Adjusted * balance1Adjusted >= _reserve0 * _reserve1 * (1000 ** 2), "AMMPair: K");
         }
 
         _update(balance0, balance1);
@@ -244,7 +244,11 @@ contract AMMPair is ReentrancyGuard {
     /// @param reserveIn The reserve of the input token.
     /// @param reserveOut The reserve of the output token.
     /// @return amountOut The calculated output amount after a 0.3% fee.
-    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256 amountOut) {
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
+        public
+        pure
+        returns (uint256 amountOut)
+    {
         require(amountIn > 0, "AMMPair: INSUFFICIENT_INPUT_AMOUNT");
         require(reserveIn > 0 && reserveOut > 0, "AMMPair: INSUFFICIENT_LIQUIDITY");
         uint256 amountInWithFee = amountIn * 997;

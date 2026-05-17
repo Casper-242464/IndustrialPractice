@@ -32,10 +32,7 @@ contract DeployL2 is Script {
 
         // 2. Deploy AMM Infrastructure (UUPS Proxy Pattern)
         AMMFactory factoryImplementation = new AMMFactory();
-        bytes memory initData = abi.encodeWithSelector(
-            AMMFactory.initialize.selector,
-            deployer
-        );
+        bytes memory initData = abi.encodeWithSelector(AMMFactory.initialize.selector, deployer);
         ERC1967Proxy proxy = new ERC1967Proxy(address(factoryImplementation), initData);
         AMMFactory factory = AMMFactory(address(proxy));
         console.log("AMMFactory Proxy deployed to:", address(factory));

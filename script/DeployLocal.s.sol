@@ -23,14 +23,11 @@ contract DeployLocal is Script {
 
         // 1. Deploy AMM Factory Implementation
         AMMFactory factoryImplementation = new AMMFactory();
-        
+
         // 2. Deploy Proxy and Initialize
-        bytes memory initData = abi.encodeWithSelector(
-            AMMFactory.initialize.selector,
-            deployer
-        );
+        bytes memory initData = abi.encodeWithSelector(AMMFactory.initialize.selector, deployer);
         ERC1967Proxy proxy = new ERC1967Proxy(address(factoryImplementation), initData);
-        
+
         AMMFactory factory = AMMFactory(address(proxy));
         console.log("AMMFactory Proxy deployed to:", address(factory));
 
