@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {GovernanceToken} from "src/governance/GovernanceToken.sol";
 import {DSATimelock} from "src/governance/DSATimelock.sol";
 import {DSAGovernor} from "src/governance/DSAGovernor.sol";
@@ -20,10 +21,18 @@ contract DeployLocal is Script {
         GovernanceToken token = new GovernanceToken("DSA Token", "DSA", deployer, 1000 ether);
         console.log("GovernanceToken deployed to:", address(token));
 
-        // Deploy and Initialize AMM Factory
-        AMMFactory factory = new AMMFactory();
-        factory.initialize(deployer);
-        console.log("AMMFactory deployed and initialized at:", address(factory));
+        // 1. Deploy AMM Factory Implementation
+        AMMFactory factoryImplementation = new AMMFactory();
+        
+        // 2. Deploy Proxy and Initialize
+        bytes memory initData = abi.encodeWithSelector(
+            AMMFactory.initialize.selector,
+            deployer
+        );
+        ERC1967Proxy proxy = new ERC1967Proxy(address(factoryImplementation), initData);
+        
+        AMMFactory factory = AMMFactory(address(proxy));
+        console.log("AMMFactory Proxy deployed to:", address(factory));
 
         // Deploy Lending and Yield Infrastructure
         LendingPool lendingPool = new LendingPool();
