@@ -218,7 +218,9 @@ contract AMMPair is ReentrancyGuard {
         require(amount0In > 0 || amount1In > 0, "AMMPair: INSUFFICIENT_INPUT");
 
         unchecked {
-            require(balance0 * balance1 >= _reserve0 * _reserve1, "AMMPair: K");
+            uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
+            uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
+            require(balance0Adjusted * balance1Adjusted >= _reserve0 * _reserve1 * (1000**2), "AMMPair: K");
         }
 
         _update(balance0, balance1);
@@ -235,6 +237,20 @@ contract AMMPair is ReentrancyGuard {
         require(amountA > 0, "AMMPair: INSUFFICIENT_AMOUNT");
         require(reserveA > 0 && reserveB > 0, "AMMPair: INSUFFICIENT_LIQUIDITY");
         return (amountA * reserveB) / reserveA;
+    }
+
+    /// @notice Calculates the output amount for a swap given an input amount and reserves.
+    /// @param amountIn The input amount.
+    /// @param reserveIn The reserve of the input token.
+    /// @param reserveOut The reserve of the output token.
+    /// @return amountOut The calculated output amount after a 0.3% fee.
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256 amountOut) {
+        require(amountIn > 0, "AMMPair: INSUFFICIENT_INPUT_AMOUNT");
+        require(reserveIn > 0 && reserveOut > 0, "AMMPair: INSUFFICIENT_LIQUIDITY");
+        uint256 amountInWithFee = amountIn * 997;
+        uint256 numerator = amountInWithFee * reserveOut;
+        uint256 denominator = (reserveIn * 1000) + amountInWithFee;
+        amountOut = numerator / denominator;
     }
 
     /// @notice Force balances to match reserves
