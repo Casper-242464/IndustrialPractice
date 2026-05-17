@@ -19,6 +19,7 @@ contract ERC4626Vault is ERC4626, Ownable {
     {}
 
     function deposit(uint256 assets, address receiver) public override returns (uint256) {
+        // slither-disable-next-line incorrect-equality
         if (totalSupply() == 0 && assets < MIN_INITIAL_DEPOSIT) {
             revert DepositTooLow();
         }
@@ -27,6 +28,7 @@ contract ERC4626Vault is ERC4626, Ownable {
 
     function mint(uint256 shares, address receiver) public override returns (uint256) {
         uint256 assets = previewMint(shares);
+        // slither-disable-next-line incorrect-equality
         if (totalSupply() == 0 && assets < MIN_INITIAL_DEPOSIT) {
             revert DepositTooLow();
         }

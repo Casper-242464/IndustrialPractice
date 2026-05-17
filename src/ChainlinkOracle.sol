@@ -24,7 +24,10 @@ contract ChainlinkOracle is Ownable {
     }
 
     function getLatestPrice() external view returns (uint256) {
-        (uint80 roundId, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeed.latestRoundData();
+        (uint80 roundId, int256 price, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
+            priceFeed.latestRoundData();
+
+        if (startedAt == 0) revert InvalidPrice();
 
         if (price <= 0) revert InvalidPrice();
 
