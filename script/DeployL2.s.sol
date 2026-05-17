@@ -11,17 +11,23 @@ import {LendingPool} from "src/LendingPool.sol";
 import {YieldVault} from "src/YieldVault.sol";
 
 contract DeployL2 is Script {
+    struct ProtocolConfig {
+        uint256 initialSupply;
+        uint256 timelockDelay;
+        uint256 quorumPercentage;
+    }
+
     function run() external {
-        // Fetch deployer private key from environment
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
+        ProtocolConfig memory config = _loadConfig();
 
         console.log("Deploying protocol to L2 with deployer:", deployer);
 
         vm.startBroadcast(deployerPrivateKey);
 
         // 1. Deploy Governance Token
-        GovernanceToken token = new GovernanceToken("DSA Token", "DSA", deployer, 1000 ether);
+        GovernanceToken token = new GovernanceToken("DSA Token", "DSA", deployer, config.initialSupply);
         console.log("GovernanceToken deployed to:", address(token));
 
         // 2. Deploy AMM Infrastructure (UUPS Proxy Pattern)
@@ -44,7 +50,7 @@ contract DeployL2 is Script {
         // 4. Deploy Governance Infrastructure
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](0);
-        DSATimelock timelock = new DSATimelock(2 days, proposers, executors, deployer);
+        DSATimelock timelock = new DSATimelock(config.timelockDelay, proposers, executors, deployer);
         console.log("DSATimelock deployed to:", address(timelock));
 
         DSAGovernor governor = new DSAGovernor(token, timelock);
@@ -59,5 +65,13 @@ contract DeployL2 is Script {
         console.log("Permissions configured and Timelock admin role revoked from deployer.");
 
         vm.stopBroadcast();
+    }
+
+    function _loadConfig() internal view returns (ProtocolConfig memory config) {
+        config = ProtocolConfig({
+            initialSupply: vm.envOr("INITIAL_SUPPLY", uint256(1000 ether)),
+            timelockDelay: vm.envOr("TIMELOCK_DELAY", uint256(2 days)),
+            quorumPercentage: vm.envOr("QUORUM_PERCENTAGE", uint256(4))
+        });
     }
 }
