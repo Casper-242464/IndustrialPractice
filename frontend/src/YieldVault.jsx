@@ -5,7 +5,7 @@ import { TOKEN_ADDRESS, YIELD_VAULT_ADDRESS, TOKEN_ABI, VAULT_ABI } from "./cont
 
 export function YieldVault() {
     const { address, isConnected } = useAccount();
-    const { writeContract, data: hash, isPending } = useWriteContract();
+    const { writeContract, data: hash, isPending, error } = useWriteContract();
 
     const [amount, setAmount] = useState("");
     const [tab, setTab] = useState("deposit");
@@ -15,6 +15,7 @@ export function YieldVault() {
         abi: TOKEN_ABI,
         functionName: "balanceOf",
         args: [address],
+        query: { refetchInterval: 1000 }
     });
 
     const { data: sharesBalance } = useReadContract({
@@ -22,12 +23,14 @@ export function YieldVault() {
         abi: VAULT_ABI,
         functionName: "balanceOf",
         args: [address],
+        query: { refetchInterval: 1000 }
     });
 
     const { data: totalVaultAssets } = useReadContract({
         address: YIELD_VAULT_ADDRESS,
         abi: VAULT_ABI,
         functionName: "totalAssets",
+        query: { refetchInterval: 1000 }
     });
 
     const { data: previewValue } = useReadContract({
@@ -35,6 +38,7 @@ export function YieldVault() {
         abi: VAULT_ABI,
         functionName: "previewRedeem",
         args: [sharesBalance || 0n],
+        query: { refetchInterval: 1000 }
     });
 
     const { data: allowance } = useReadContract({
@@ -42,14 +46,17 @@ export function YieldVault() {
         abi: TOKEN_ABI,
         functionName: "allowance",
         args: [address, YIELD_VAULT_ADDRESS],
+        query: { refetchInterval: 1000 }
     });
+
+    const safeAllowance = allowance !== undefined ? BigInt(allowance) : 0n;
 
     const handleAction = async () => {
         if (!amount || parseFloat(amount) <= 0) return;
         const parsedAmount = parseEther(amount);
 
         if (tab === "deposit") {
-            if (!allowance || allowance < parsedAmount) {
+            if (safeAllowance < parsedAmount) {
                 writeContract({
                     address: TOKEN_ADDRESS,
                     abi: TOKEN_ABI,
@@ -76,7 +83,7 @@ export function YieldVault() {
 
     if (!isConnected) return null;
 
-    const needsApprove = tab === "deposit" && allowance < (amount ? parseEther(amount) : 0n);
+    const needsApprove = tab === "deposit" && safeAllowance < (amount ? parseEther(amount) : 0n);
 
     return (
         <div style={{ padding: "20px", borderRadius: "12px", background: "#1a1a1a", borderTop: "1px solid #333", borderBottom: "1px solid #333", color: "white" }}>
@@ -156,6 +163,7 @@ export function YieldVault() {
             </button>
 
             {hash && <p style={{ color: "#4ade80", fontSize: "0.85em", marginTop: "12px", textAlign: "center" }}>✓ Transaction sent successfully! Hash: {hash.slice(0, 15)}...</p>}
+            {error && <p style={{ color: "#ff4d4d", fontSize: "0.85em", marginTop: "12px", textAlign: "center" }}>✕ Error: {error.shortMessage || error.message}</p>}
         </div>
     );
 }

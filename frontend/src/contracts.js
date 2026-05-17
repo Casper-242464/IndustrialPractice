@@ -36,6 +36,8 @@ export const AMM_PAIR_ABI = parseAbi([
 
 export const TOKEN_ABI = parseAbi([
     "function balanceOf(address owner) view returns (uint256)",
+    "function approve(address spender, uint256 value) returns (bool)",
+    "function allowance(address owner, address spender) view returns (uint256)",
     "function delegate(address delegatee)",
     "function getVotes(address account) view returns (uint256)",
     "function transfer(address to, uint256 amount) returns (bool)",

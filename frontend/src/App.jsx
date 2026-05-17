@@ -109,6 +109,7 @@ function App() {
                     <div style={{ flex: "1" }}>
                       <YieldVault />
                     </div>
+
                   </div>
                 )}
               </NetworkGuard>
