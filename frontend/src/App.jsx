@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { injected } from "wagmi/connectors";
 import { useState } from "react";
 import { YieldVault } from "./YieldVault";
+import { AMMPanel } from "./AMMPanel";
 
 const queryClient = new QueryClient();
 
@@ -109,7 +110,9 @@ function App() {
                     <div style={{ flex: "1" }}>
                       <YieldVault />
                     </div>
-
+                    <div style={{ flex: "1.2" }}>
+                      <AMMPanel />
+                    </div>
                   </div>
                 )}
               </NetworkGuard>

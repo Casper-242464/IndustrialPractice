@@ -20,11 +20,13 @@ export const VAULT_ABI = parseAbi([
 export const AMM_FACTORY_ABI = parseAbi([
     "function getPair(address tokenA, address tokenB) view returns (address)",
     "function createPair(address tokenA, address tokenB) returns (address)",
+    "function createPairCreate2(address tokenA, address tokenB) returns (address)",
     "function allPairsLength() view returns (uint256)"
 ]);
 
 export const AMM_PAIR_ABI = parseAbi([
     "function getReserves() view returns (uint256 reserve0, uint256 reserve1)",
+    "function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) pure returns (uint256 amountOut)",
     "function addLiquidity(uint256 amount0, uint256 amount1, address to) returns (uint256)",
     "function removeLiquidity(uint256 liquidity, address to) returns (uint256, uint256)",
     "function swap(uint256 amount0Out, uint256 amount1Out, address to)",
