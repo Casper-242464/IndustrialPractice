@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-//forge script script/DeployL2.s.sol --rpc-url --broadcast --verify --etherscan-api-key -vvvv
-
 import {Script, console} from "forge-std/Script.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {GovernanceToken} from "src/governance/GovernanceToken.sol";
-import {DSATimelock} from "src/governance/DSATimelock.sol";de
+import {DSATimelock} from "src/governance/DSATimelock.sol";
 import {DSAGovernor} from "src/governance/DSAGovernor.sol";
 import {AMMFactory} from "src/AMMFactory.sol";
 import {LendingPool} from "src/LendingPool.sol";
