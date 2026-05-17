@@ -220,7 +220,7 @@ contract AMMPair is ReentrancyGuard {
         unchecked {
             require(balance0 * balance1 >= _reserve0 * _reserve1, "AMMPair: K");
         }
-        
+
         _update(balance0, balance1);
 
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
@@ -283,7 +283,7 @@ contract AMMPair is ReentrancyGuard {
             if gt(y, 3) {
                 z := y
                 let x := add(div(y, 2), 1)
-                for { } lt(x, z) { } {
+                for {} lt(x, z) {} {
                     z := x
                     x := div(add(div(y, x), x), 2)
                 }

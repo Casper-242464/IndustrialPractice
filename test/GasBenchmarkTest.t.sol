@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 
 contract GasBenchmarkTest is Test {
     function test_Gas_Solidity_Sqrt() public {
-        uint256 y = 10**18;
+        uint256 y = 10 ** 18;
         uint256 z;
         if (y > 3) {
             z = y;
@@ -20,18 +20,19 @@ contract GasBenchmarkTest is Test {
     }
 
     function test_Gas_Yul_Sqrt() public {
-        uint256 y = 10**18;
+        uint256 y = 10 ** 18;
         uint256 z;
         assembly {
             z := 1
             if gt(y, 3) {
                 z := y
                 let x := add(div(y, 2), 1)
-                for { } lt(x, z) { } {
+                for {} lt(x, z) {} {
                     z := x
                     x := div(add(div(y, x), x), 2)
                 }
             }
+            if iszero(y) { z := 0 }
         }
     }
 }
