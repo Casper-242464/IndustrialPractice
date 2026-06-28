@@ -87,7 +87,7 @@ anvil
 
 2. In the second terminal deploy our contracts to the local node. Then copy the contract addresses from the output and paste them into the frontend/src/contracts.js 
 ```bash
-forge script script/DeployGovernance.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
+forge script script/DeployLocal.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
 ```
 
 3. Finally, in the third terminal deploy the website itself
