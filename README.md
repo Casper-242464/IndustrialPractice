@@ -1,4 +1,4 @@
-# DeFi Super-App Protocol (Option A) — Full-Stack Capstone
+# DeFi Super-App Protocol — Full-Stack Capstone
 
 ## 1. Project Overview & Scope
 This repository contains the production-grade decentralized architecture for our Full-Stack DeFi Super-App, serving as the capstone project for Blockchain Technologies 2. 
